@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace LambdaAndGeneric.IDAL
 {
+    /// <summary>
+    /// 说明： BaseIDAL 的封装
+    /// 时间：2018年8月15日 
+    /// 作用：用于被继承，减少代码
+    /// 作者：null
+    /// </summary>
+    /// <typeparam name="T">约束对象</typeparam>
     public interface BaseIDAL<T> where T : new()
     {
+
         /// <summary>
         /// 执行一个插入操作
         /// </summary>
@@ -15,18 +19,21 @@ namespace LambdaAndGeneric.IDAL
         /// <param name="Entity"></param>
         /// <returns></returns>
         bool ADD(T Entity);
+
         /// <summary>
         /// 根据ID删除一条数据
         /// </summary>
         /// <param name="ID"></param>
         /// <returns></returns>
         bool Del(int ID);
+
         /// <summary>
         /// 根据Model更新一条数据
         /// </summary>
         /// <param name="Entity"></param>
         /// <returns></returns>
         bool Update(T Entity);
+
         /// <summary>
         /// 获得单个实体
         /// </summary>

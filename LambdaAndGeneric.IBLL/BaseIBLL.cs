@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace LambdaAndGeneric.IBLL
 {
+    /// <summary>
+    /// 说明： BaseIBLL 的封装
+    /// 时间：2018年8月15日11:11:31
+    /// 作用：用于被继承，减少代码
+    /// 作者：null
+    /// </summary>
+    /// <typeparam name="T">约束对象</typeparam>
     public interface BaseIBLL<T> where T: new()
     {
         /// <summary>

@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
 using LambdaAndGeneric.IDAL;
 using LamdbaAndGeneric.HelperDAL;
-using System.Reflection;
 
 namespace LambdaAndGeneric.DAL
 {
+    /// <summary>
+    /// 说明： BaseDAL 的封装
+    /// 时间：2018年8月15日
+    /// 作用：用于被继承，减少代码
+    /// 作者：null
+    /// </summary>
+    /// <typeparam name="T">约束对象</typeparam>
     public class BaseDAL<T> : BaseIDAL<T> where T : new()
     {
 
@@ -137,14 +142,12 @@ namespace LambdaAndGeneric.DAL
 
         /// <summary>
         ///  根据传入的SQL语句执行查询，并返回一个IEnumable<T>类型的集合
-        ///  注意 T 必须约束为 where T : class, new()）
+        ///  注意 W 必须约束为 where W : class, new()）
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
         public IEnumerable<W> GetEntityListSQl<W>(string sql)
         {
-            Type type = typeof(T);
-
             using (SqlDataReader reader = SenctionHelper.ExecuteReader(sql))
             {
                 if (reader.HasRows)
@@ -162,7 +165,7 @@ namespace LambdaAndGeneric.DAL
         #region  根据传入的条件执行Sql语句，并返回一个IEnumerable<T>类型的集合
 
         /// <summary>
-        /// 根据传入的条件执行Sql语句，并返回一个IEnumerable<T>类型的集合
+        /// 根据传入的条件执行查询，并返回一个IEnumerable<T>类型的集合
         /// （注意传入的 T 必须约束为 where T : class, new()）
         /// </summary>
         /// <typeparam name="T">类型：【 约束为 where T : class, new() 】</typeparam>
