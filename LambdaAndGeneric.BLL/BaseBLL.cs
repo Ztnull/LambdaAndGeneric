@@ -32,9 +32,9 @@ namespace LambdaAndGeneric.BLL
         {
             return dao.GetEntityList(where);
         }
-        public IEnumerable<T> GetEntityListSQl(string sql)
+        public IEnumerable<W> GetEntityListSQl<W>(string sql)
         {
-            return dao.GetEntityListSQl(sql);
+            return dao.GetEntityListSQl<W>(sql);
         }
     }
 }

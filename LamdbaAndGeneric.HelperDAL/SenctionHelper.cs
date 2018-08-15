@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LamdbaAndGeneric.HelperDAL
 {
-    public static class SenctionHelper<T> where T : new()
+    public static class SenctionHelper
     {
 
         static string ConnectionStringCustomers;
@@ -21,6 +21,20 @@ namespace LamdbaAndGeneric.HelperDAL
         }
 
         #region 公用
+
+
+        #region 获取映射模型的字段
+        /// <summary>
+        /// 获得当前对象的所有公共字段
+        /// </summary>
+        /// <param name="modelName"></param>
+        /// <returns></returns>
+        public static string GetModelSenction<T>()
+        {
+            Type type = typeof(T);
+            return string.Join(",", type.GetProperties().Select(p => string.Format("[{0}]", p.Name)));
+        }
+        #endregion
 
         #region ExecuteNonQuery +static int ExecuteNonQuery(string cmdText, params SqlParameter[] parameters)
         /// <summary>
@@ -71,19 +85,6 @@ namespace LamdbaAndGeneric.HelperDAL
                     }
                 }
             }
-        }
-        #endregion
-
-        #region 获取映射模型的字段
-        /// <summary>
-        /// 获得当前对象的所有公共字段
-        /// </summary>
-        /// <param name="modelName"></param>
-        /// <returns></returns>
-        public static string GetModelSenction()
-        {
-            Type type = typeof(T);
-            return string.Join(",", type.GetProperties().Select(p => string.Format("[{0}]", p.Name)));
         }
         #endregion
 
@@ -147,11 +148,11 @@ namespace LamdbaAndGeneric.HelperDAL
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="reader">当前指向的reader</param>
         /// <returns>实体对象</returns>
-        public static W MapEntity<W>(SqlDataReader reader)
+        public static T MapEntity<T>(SqlDataReader reader)
         {
             try
             {
-                Type type = typeof(W);
+                Type type = typeof(T);
                 var props = type.GetProperties();
 
                 object entity = Activator.CreateInstance(type);//创建返回的单个对象
@@ -174,11 +175,11 @@ namespace LamdbaAndGeneric.HelperDAL
                         }
                     }
                 }
-                return (W)entity;
+                return (T)entity;
             }
-            catch
+            catch(Exception ex)
             {
-                return default(W);
+                return default(T);
             }
         }
         #endregion

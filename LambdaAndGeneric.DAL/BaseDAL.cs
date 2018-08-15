@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 using System.Configuration;
 using LambdaAndGeneric.IDAL;
 using LamdbaAndGeneric.HelperDAL;
+using System.Reflection;
 
 namespace LambdaAndGeneric.DAL
 {
     public class BaseDAL<T> : BaseIDAL<T> where T : new()
     {
+
         #region 根据Model更新一条数据
 
         /// <summary>
@@ -46,7 +48,7 @@ namespace LambdaAndGeneric.DAL
 
             string execSql = $" update {type.Name} {builder.ToString()} where {builderWhere.ToString()}";
 
-            return SenctionHelper<T>.ExecuteNonQuery(execSql) > 0;
+            return SenctionHelper.ExecuteNonQuery(execSql) > 0; //SenctionHelper<T>.ExecuteNonQuery(execSql) > 0;
         }
 
         #endregion
@@ -63,7 +65,7 @@ namespace LambdaAndGeneric.DAL
             Type type = typeof(T);
 
             string execSql = $" delete from {type.Name} where ID={ID} ";
-            return SenctionHelper<T>.ExecuteNonQuery(execSql) > 0;
+            return SenctionHelper.ExecuteNonQuery(execSql) > 0;
         }
 
         #endregion
@@ -79,16 +81,18 @@ namespace LambdaAndGeneric.DAL
         {
             Type type = typeof(T);
             object oT = Activator.CreateInstance(type);
+            PropertyInfo[] propertys = Entity.GetType().GetProperties();
+            StringBuilder builder = new StringBuilder();
 
             //获取字段
-            var section = string.Join(",", type.GetProperties().Where(w => !w.Name.Equals("ID", StringComparison.CurrentCultureIgnoreCase) || !w.Name.Equals("FID", StringComparison.CurrentCultureIgnoreCase)).Select(s => s.Name));
+            var section = string.Join(",", type.GetProperties().Where(w => !w.Name.Equals("ID", StringComparison.CurrentCultureIgnoreCase) && !w.Name.Equals("FID", StringComparison.CurrentCultureIgnoreCase)).Select(s => s.Name));
 
             //获取值
-            var value = string.Join(",", type.GetProperties().Where(w => !w.Name.Equals("ID", StringComparison.CurrentCultureIgnoreCase) || !w.Name.Equals("FID", StringComparison.CurrentCultureIgnoreCase)).Select(p => p.GetValue(oT)));
+            var value = "'" + string.Join("','", propertys.Where(w => !w.Name.Equals("ID", StringComparison.CurrentCultureIgnoreCase) && !w.Name.Equals("FID", StringComparison.CurrentCultureIgnoreCase)).Select(p => p.GetValue(Entity))) + "'";
 
             string execSql = $" insert into {type.Name}({section}) values({value}) ";
 
-            return SenctionHelper<T>.ExecuteNonQuery(execSql) > 0;
+            return SenctionHelper.ExecuteNonQuery(execSql) > 0;
         }
 
         #endregion
@@ -102,17 +106,27 @@ namespace LambdaAndGeneric.DAL
         public T GetEntity(int ID)
         {
             Type type = typeof(T);
-            string sql = $" SELECT {SenctionHelper<T>.GetModelSenction()} from {type.Name} ";
+            string sql = $" SELECT {SenctionHelper.GetModelSenction<T>()} from {type.Name} ";
 
             try
             {
-                using (SqlDataReader reader = SenctionHelper<T>.ExecuteReader(sql))
+                using (SqlDataReader reader = SenctionHelper.ExecuteReader(sql))
                 {
-                    return SenctionHelper<T>.MapEntity<T>(reader);
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        return SenctionHelper.MapEntity<T>(reader);
+                    }
+                    else
+                    {
+                        return default(T);
+                    }
+
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return default(T);
             }
 
@@ -120,31 +134,33 @@ namespace LambdaAndGeneric.DAL
         #endregion
 
         #region  根据传入的条件执行Sql语句，并返回一个IEnumerable<T>类型的集合
+
         /// <summary>
-        /// 根据传入的条件执行Sql语句，并返回一个IEnumerable<T>类型的集合
-        /// （注意传入的 T 必须约束为 where T : class, new()）
+        ///  根据传入的SQL语句执行查询，并返回一个IEnumable<T>类型的集合
+        ///  注意 T 必须约束为 where T : class, new()）
         /// </summary>
-        /// <typeparam name="T">类型：【 约束为 where T : class, new() 】</typeparam>
-        /// <param name="where">查询的条件，请省略 Where 关键字</param>
+        /// <param name="sql"></param>
         /// <returns></returns>
-        public IEnumerable<T> GetEntityListSQl(string sql)
+        public IEnumerable<W> GetEntityListSQl<W>(string sql)
         {
             Type type = typeof(T);
 
-            using (SqlDataReader reader = SenctionHelper<T>.ExecuteReader(sql))
+            using (SqlDataReader reader = SenctionHelper.ExecuteReader(sql))
             {
                 if (reader.HasRows)
                 {
                     while (reader.Read())
                     {
-                        yield return SenctionHelper<T>.MapEntity<T>(reader);
+                        yield return SenctionHelper.MapEntity<W>(reader);
                     }
                 }
             }
         }
+
         #endregion
 
         #region  根据传入的条件执行Sql语句，并返回一个IEnumerable<T>类型的集合
+
         /// <summary>
         /// 根据传入的条件执行Sql语句，并返回一个IEnumerable<T>类型的集合
         /// （注意传入的 T 必须约束为 where T : class, new()）
@@ -158,20 +174,21 @@ namespace LambdaAndGeneric.DAL
             //遍历获得字段
             //string columnString = string.Join(",", type.GetProperties().Select(p => string.Format("[{0}]", p.Name)));
             string sql = string.Format("SELECT {0} FROM [{1}] WHere {2} ",
-               SenctionHelper<T>.GetModelSenction(),
+               SenctionHelper.GetModelSenction<T>(),
                 type.Name,
                 where);
-            using (SqlDataReader reader = SenctionHelper<T>.ExecuteReader(sql))
+            using (SqlDataReader reader = SenctionHelper.ExecuteReader(sql))
             {
                 if (reader.HasRows)
                 {
                     while (reader.Read())
                     {
-                        yield return SenctionHelper<T>.MapEntity<T>(reader);
+                        yield return SenctionHelper.MapEntity<T>(reader);
                     }
                 }
             }
         }
+
         #endregion
     }
 }
