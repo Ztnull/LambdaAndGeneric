@@ -37,7 +37,7 @@ namespace LambdaAndGeneric.DAL
             foreach (var item in type.GetProperties())
             {
                 //字段和值得拼接
-                if (!item.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) || !item.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase))
+                if (!item.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) && !item.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase))
                 {
                     builder.Append(item.Name + "=" + item.GetValue(oT));
                 }
