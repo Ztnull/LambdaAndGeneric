@@ -31,10 +31,13 @@ namespace LambdaAndGeneric.DAL
         {
             Type type = typeof(T);
             object oT = Activator.CreateInstance(type);
+
+            var oEntity = Entity.GetType().GetProperties();//
+
             StringBuilder builder = new StringBuilder(256);
             StringBuilder builderWhere = new StringBuilder(256);
 
-            foreach (var item in type.GetProperties())
+            foreach (var item in oEntity)
             {
                 //字段和值得拼接
                 if (!item.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) && !item.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase))
