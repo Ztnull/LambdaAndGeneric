@@ -68,7 +68,12 @@ namespace LambdaAndGeneric.DAL
             SqlParameter[] sqlParameters = type.GetProperties().Where(item => !item.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) && !item.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase)).Select(s => new SqlParameter(string.Format("@{0}", s.Name), s.GetValue(Entity) ?? DBNull.Value)).ToArray();
 
 
-            return SenctionHelper.ExecuteNonQuery(sqlText, sqlParameters) > 0;
+            return SenctionHelper.Excute<bool>(sqlText, t =>
+               {
+                   return t.ExecuteNonQuery() > 0;
+               }, sqlParameters);
+
+            // return true;//SenctionHelper.ExecuteNonQuery(sqlText, sqlParameters) > 0;//old
         }
 
         #endregion
@@ -84,8 +89,18 @@ namespace LambdaAndGeneric.DAL
         {
             Type type = typeof(T);
 
-            string execSql = $" delete from {type.Name} where ID={ID} ";
-            return SenctionHelper.ExecuteNonQuery(execSql) > 0;
+            string where = type.GetProperties().Where(w => w.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) || w.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase)).Select(p => string.Format("[{0}]=@{1}", p.Name, p.Name)).FirstOrDefault();
+
+            SqlParameter[] sqlParameters = type.GetProperties().Where(w => w.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) || w.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase)).Select(p => new SqlParameter(string.Format("@{0}", p.Name), ID)).ToArray();
+
+            string execSql = $" DELETE FROM [{type.Name}] where {where} ";
+
+            return SenctionHelper.Excute<bool>(execSql, t =>
+             {
+                 return t.ExecuteNonQuery() > 0;
+             }, sqlParameters);
+
+            // return SenctionHelper.ExecuteNonQuery(execSql) > 0;//old
         }
 
         #endregion
@@ -116,7 +131,11 @@ namespace LambdaAndGeneric.DAL
 
             sqlText = string.Format(sqlText, type.Name, columString, valuePars);
 
-            return SenctionHelper.ExecuteNonQuery(sqlText, sqlParameters) > 0;
+            return SenctionHelper.Excute<bool>(sqlText, s =>
+            {
+                return s.ExecuteNonQuery() > 0;
+            }, sqlParameters);
+            //return SenctionHelper.ExecuteNonQuery(sqlText, sqlParameters) > 0;
         }
 
         #endregion
@@ -130,29 +149,57 @@ namespace LambdaAndGeneric.DAL
         public T GetEntity(int ID)
         {
             Type type = typeof(T);
-            string sql = $" SELECT {SenctionHelper.GetModelSenction<T>()} from {type.Name} ";
+            string where = type.GetProperties().Where(w => w.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) || w.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase)).Select(p => string.Format("[{0}]=@{1}", p.Name, p.Name)).FirstOrDefault();
 
-            try
-            {
-                using (SqlDataReader reader = SenctionHelper.ExecuteReader(sql))
-                {
-                    if (reader.HasRows)
-                    {
-                        reader.Read();
-                        return SenctionHelper.MapEntity<T>(reader);
-                    }
-                    else
-                    {
-                        return default(T);
-                    }
+            SqlParameter[] sqlParameters = type.GetProperties().Where(w => w.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) || w.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase)).Select(p => new SqlParameter(string.Format("@{0}", p.Name), ID)).ToArray();
 
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return default(T);
-            }
+            string sql = $" SELECT {SenctionHelper.GetModelSenction<T>()} from [{type.Name}] where {where} ";
+
+            return SenctionHelper.Excute<T>(sql, s =>
+             {
+                 using (SqlDataReader reder = s.ExecuteReader())
+                 {
+                     if (reder.HasRows)
+                     {
+                         if (reder.Read())
+                         {
+                             return SenctionHelper.MapEntity<T>(reder);
+                         }
+                         else
+                         {
+                             return default(T);
+                         }
+                     }
+                     else
+                     {
+                         return default(T);
+                     }
+                 }
+             }, sqlParameters);
+
+            #region old
+            //try
+            //{
+            //    using (SqlDataReader reader = SenctionHelper.ExecuteReader(sql))
+            //    {
+            //        if (reader.HasRows)
+            //        {
+            //            reader.Read();
+            //            return SenctionHelper.MapEntity<T>(reader);
+            //        }
+            //        else
+            //        {
+            //            return default(T);
+            //        }
+
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //    return default(T);
+            //} 
+            #endregion
 
         }
         #endregion
@@ -167,16 +214,28 @@ namespace LambdaAndGeneric.DAL
         /// <returns></returns>
         public IEnumerable<W> GetEntityListSQl<W>(string sql)
         {
-            using (SqlDataReader reader = SenctionHelper.ExecuteReader(sql))
-            {
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        yield return SenctionHelper.MapEntity<W>(reader);
-                    }
-                }
-            }
+            // SqlDataReader reader  SenctionHelper.Excute<SqlDataReader>(sql, s => { return s.ExecuteReader(); });
+            IList<W> list = new List<W>();
+            return SenctionHelper.Excute<IList<W>>(sql, s =>
+                 {
+                     using (SqlDataReader reader = s.ExecuteReader())
+                     {
+                         if (reader.HasRows)
+                         {
+                             while (reader.Read())
+                             {
+
+                                 list.Add(SenctionHelper.MapEntity<W>(reader));
+                             }
+                         }
+                         else
+                         {
+                             return default(List<W>);
+                         }
+                     }
+                     return list;
+                 });
+
         }
 
         #endregion
@@ -193,22 +252,35 @@ namespace LambdaAndGeneric.DAL
         public IEnumerable<T> GetEntityList(string where)
         {
             Type type = typeof(T);
-            //遍历获得字段
-            //string columnString = string.Join(",", type.GetProperties().Select(p => string.Format("[{0}]", p.Name)));
+            //遍历获得字段 
+
             string sql = string.Format("SELECT {0} FROM [{1}] WHere {2} ",
                SenctionHelper.GetModelSenction<T>(),
                 type.Name,
                 where);
-            using (SqlDataReader reader = SenctionHelper.ExecuteReader(sql))
+
+
+            IList<T> list = new List<T>();
+
+            return SenctionHelper.Excute<IList<T>>(sql, s =>
             {
-                if (reader.HasRows)
+                using (SqlDataReader reader = s.ExecuteReader())
                 {
-                    while (reader.Read())
+                    if (reader.HasRows)
                     {
-                        yield return SenctionHelper.MapEntity<T>(reader);
+                        while (reader.Read())
+                        {
+
+                            list.Add(SenctionHelper.MapEntity<T>(reader));
+                        }
+                    }
+                    else
+                    {
+                        return default(List<T>);
                     }
                 }
-            }
+                return list;
+            });
         }
 
         #endregion

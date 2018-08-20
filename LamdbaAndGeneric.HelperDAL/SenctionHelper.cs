@@ -13,7 +13,7 @@ namespace LamdbaAndGeneric.HelperDAL
     public static class SenctionHelper
     {
 
-     
+
         #region 公用
 
 
@@ -171,12 +171,54 @@ namespace LamdbaAndGeneric.HelperDAL
                 }
                 return (T)entity;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return default(T);
             }
         }
         #endregion
+
+        #endregion
+
+
+
+
+        #region 泛型命令封装
+
+        /// <summary>
+        ///抽象出所有的数据操作。
+        /// </summary>
+        /// <typeparam name="T">返回类型</typeparam>
+        /// <param name="sql">执行的语句</param>
+        /// <param name="func">执行的方法</param>
+        /// <returns></returns>
+        public static T Excute<T>(string sql, Func<SqlCommand, T> func, params SqlParameter[] parameters)
+        {
+            using (SqlConnection conn = new SqlConnection(Constant.ConnectionStringCustomers))
+            {
+                conn.Open();
+                //SqlTransaction trans = conn.BeginTransaction();         
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(sql, conn))
+                    {
+                        if (parameters != null)
+                        {
+                            command.Parameters.Clear();
+                            command.Parameters.AddRange(parameters);
+                        }
+                        T t = func(command);
+                        return t;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //trans.Rollback();
+                    throw ex;
+                }
+
+            }
+        }
 
         #endregion
 

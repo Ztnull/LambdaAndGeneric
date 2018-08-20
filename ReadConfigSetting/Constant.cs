@@ -14,6 +14,24 @@ namespace ReadConfigSetting
     /// </summary>
     public class Constant
     {
+
+
+        #region BLL 工厂配置
+
+        //Company
+        public static string DbCompany = ConfigurationManager.AppSettings["Company"];
+        public static string CompanyDllName = DbCompany.Split(',')[0];
+        public static string CompanyTypeName = DbCompany.Split(',')[1];
+
+        //User
+        public static string DbUser = ConfigurationManager.AppSettings["User"];
+        public static string UserDllName = DbUser.Split(',')[0];
+        public static string UserTypeName = DbUser.Split(',')[1];
+
+        #endregion
+
+        #region DAL 配置
+
         /// <summary>
         /// 数据库连接字符串
         /// </summary>
@@ -26,13 +44,10 @@ namespace ReadConfigSetting
         public static string DllName = DbConfig.Split(',')[0];
         public static string TypeName = DbConfig.Split(',')[1];
 
+        #endregion
 
-        #region BLL 工厂配置
 
-        //Company
-        public static string DbCompany = ConfigurationManager.AppSettings["Company"];
-        public static string CompanyDllName = DbCompany.Split(',')[0];
-        public static string CompanyTypeName = DbCompany.Split(',')[1];
+        #region Other 其他配置
 
         #endregion
 
