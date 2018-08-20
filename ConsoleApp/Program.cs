@@ -15,20 +15,30 @@ namespace ConsoleApp
         static void Main(string[] args)
         {
             {
-                CompanyDAL company = new CompanyDAL();
+                CompanyIBLL<Company> company = new CompanyBLL();
                 var xx = company.GetEntity(1);
 
-                var result = company.ADD(new Company() { CreateTime = System.DateTime.Now, CreatorId = 2, ID = 2, LastModifierId = 2, LastModifyTime = System.DateTime.Now, Name = "xxx" });
 
-                var list=   company.GetEntityListSQl<Company>("  SELECT  * from company ");
+                var result = company.Update(new Company() { CreateTime = System.DateTime.Now, CreatorId = 2, ID = 9, LastModifierId = 2, LastModifyTime = System.DateTime.Now, Name = "xxx",   });
+                Console.WriteLine(result);
 
-
-                foreach (var item in list)
                 {
-                    Console.WriteLine(item.ID+ "***" + item.LastModifierId+"**"+item.LastModifyTime+"***" +item.Name);
+                    Console.WriteLine("*****************************GetEntityListSQl***********************************");
+                    var list = company.GetEntityListSQl<Company>("  SELECT  * from company ");
+                    foreach (var item in list)
+                    {
+                        Console.WriteLine(item.ID + "***" + item.LastModifierId + "**" + item.LastModifyTime + "***" + item.Name);
+                    }
                 }
 
-                Console.WriteLine(result);
+                {
+                    Console.WriteLine("*****************************GetEntityList***********************************");
+                    var listbll = company.GetEntityList("id>0");
+                    foreach (var item in listbll)
+                    {
+                        Console.WriteLine(item.ID + "***" + item.LastModifierId + "**" + item.LastModifyTime + "***" + item.Name);
+                    }
+                }
                 Console.ReadKey();
             }
         }

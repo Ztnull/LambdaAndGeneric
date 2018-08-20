@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LambdaAndGeneric.FactoryDAL
 {
-    public class Class1
+    public class Class1<T> where T : struct  
     {
     }
 }

@@ -29,34 +29,46 @@ namespace LambdaAndGeneric.DAL
         /// <returns></returns>
         public bool Update(T Entity)
         {
+            string sqlText = "UPDATE  [{0}] SET {1} where {2}";
+
             Type type = typeof(T);
-            object oT = Activator.CreateInstance(type);
-
-            var oEntity = Entity.GetType().GetProperties();//
-
-            StringBuilder builder = new StringBuilder(256);
-            StringBuilder builderWhere = new StringBuilder(256);
-
-            foreach (var item in oEntity)
-            {
-                //字段和值得拼接
-                if (!item.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) && !item.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    builder.Append(item.Name + "=" + item.GetValue(oT));
-                }
-                //获取ID条件
-                if (item.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) || item.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    builderWhere.Clear();
-                    builderWhere.Append(item.Name + "=" + item.GetValue(oT));
-                }
-            }
+            object oT = Activator.CreateInstance(Entity.GetType());
 
 
+            #region old
+            //var oEntity = Entity.GetType().GetProperties();//
+            //StringBuilder builder = new StringBuilder(256);
+            //StringBuilder builderWhere = new StringBuilder(256);
 
-            string execSql = $" update {type.Name} {builder.ToString()} where {builderWhere.ToString()}";
+            //foreach (var item in oEntity)
+            //{
+            //    //字段和值得拼接
+            //    if (!item.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) && !item.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase))
+            //    {
+            //        builder.Append(item.Name + "=" + item.GetValue(oT));
+            //    }
+            //    //获取ID条件
+            //    if (item.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) || item.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase))
+            //    {
+            //        builderWhere.Clear();
+            //        builderWhere.Append(item.Name + "=" + item.GetValue(oT));
+            //    }
+            //} 
 
-            return SenctionHelper.ExecuteNonQuery(execSql) > 0; //SenctionHelper<T>.ExecuteNonQuery(execSql) > 0;
+            //string execSql = $" update {type.Name} {builder.ToString()} where {builderWhere.ToString()}";
+            #endregion
+
+            //
+            string columString = string.Join(",", type.GetProperties().Where(item => !item.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) && !item.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase)).Select(s => string.Format("{0}=@{1}", s.Name, s.Name)));
+
+            var where = type.GetProperties().Where(p => p.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) || p.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase)).Select(s => string.Format("[{0}]={1}", s.Name, s.GetValue(Entity))).FirstOrDefault();
+
+            sqlText = string.Format(sqlText, type.Name, columString, where);
+
+            SqlParameter[] sqlParameters = type.GetProperties().Where(item => !item.Name.Equals("ID", StringComparison.InvariantCultureIgnoreCase) && !item.Name.Equals("FID", StringComparison.InvariantCultureIgnoreCase)).Select(s => new SqlParameter(string.Format("@{0}", s.Name), s.GetValue(Entity) ?? DBNull.Value)).ToArray();
+
+
+            return SenctionHelper.ExecuteNonQuery(sqlText, sqlParameters) > 0;
         }
 
         #endregion
@@ -87,20 +99,24 @@ namespace LambdaAndGeneric.DAL
         /// <returns></returns>
         public bool ADD(T Entity)
         {
-            Type type = typeof(T);
+
+            string sqlText = "Insert into [{0}] ({1}) values({2}) ";
+
+            var type = typeof(T);
             object oT = Activator.CreateInstance(type);
-            PropertyInfo[] propertys = Entity.GetType().GetProperties();
-            StringBuilder builder = new StringBuilder();
+            //PropertyInfo[] propertys = Entity.GetType().GetProperties();
 
             //获取字段
-            var section = string.Join(",", type.GetProperties().Where(w => !w.Name.Equals("ID", StringComparison.CurrentCultureIgnoreCase) && !w.Name.Equals("FID", StringComparison.CurrentCultureIgnoreCase)).Select(s => s.Name));
+            var columString = string.Join(",", type.GetProperties().Where(w => !w.Name.Equals("ID", StringComparison.CurrentCultureIgnoreCase) && !w.Name.Equals("FID", StringComparison.CurrentCultureIgnoreCase)).Select(s => s.Name));
 
-            //获取值
-            var value = "'" + string.Join("','", propertys.Where(w => !w.Name.Equals("ID", StringComparison.CurrentCultureIgnoreCase) && !w.Name.Equals("FID", StringComparison.CurrentCultureIgnoreCase)).Select(p => p.GetValue(Entity))) + "'";
+            //参数化
+            var valuePars = string.Join(",", type.GetProperties().Where(w => !w.Name.Equals("ID", StringComparison.CurrentCultureIgnoreCase) && !w.Name.Equals("FID", StringComparison.CurrentCultureIgnoreCase)).Select(s => string.Format("@{0}", s.Name)));
 
-            string execSql = $" insert into {type.Name}({section}) values({value}) ";
+            SqlParameter[] sqlParameters = type.GetProperties().Where(w => !w.Name.Equals("ID", StringComparison.CurrentCultureIgnoreCase) && !w.Name.Equals("FID", StringComparison.CurrentCultureIgnoreCase)).Select(p => new SqlParameter(string.Format("@{0}", p.Name), p.GetValue(Entity) ?? DBNull.Value)).ToArray();
 
-            return SenctionHelper.ExecuteNonQuery(execSql) > 0;
+            sqlText = string.Format(sqlText, type.Name, columString, valuePars);
+
+            return SenctionHelper.ExecuteNonQuery(sqlText, sqlParameters) > 0;
         }
 
         #endregion
