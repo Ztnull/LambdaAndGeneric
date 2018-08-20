@@ -58,10 +58,6 @@
       <Project>{80afbb97-3957-4580-99de-3eb852d5625b}</Project>
       <Name>LambdaAndGeneric.FactoryBLL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LambdaAndGeneric.FactoryDAL\LambdaAndGeneric.FactoryDAL.csproj">
-      <Project>{e7238550-9907-46b1-a374-1a83ba145907}</Project>
-      <Name>LambdaAndGeneric.FactoryDAL</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LambdaAndGeneric.IBLL\LambdaAndGeneric.IBLL.csproj">
       <Project>{722B3D8A-F08E-484D-9B7F-84432F0EE2E7}</Project>
       <Name>LambdaAndGeneric.IBLL</Name>

@@ -42,8 +42,13 @@
   <ItemGroup>
     <Compile Include="FactoryBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FactoryBaseBLL.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LambdaAndGeneric.IDAL\LambdaAndGeneric.IDAL.csproj">
+      <Project>{018560C2-2472-4D32-8B36-32DF3B816A49}</Project>
+      <Name>LambdaAndGeneric.IDAL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ReadConfigSetting\ReadConfigSetting.csproj">
       <Project>{56510547-7aad-4fb5-8897-566057e319b0}</Project>
       <Name>ReadConfigSetting</Name>

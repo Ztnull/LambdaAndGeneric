@@ -9,6 +9,8 @@ namespace ReadConfigSetting
 {
     /// <summary>
     /// 提供全局的文件配置
+    /// 将Config读取的配置都写到这里
+    /// 多数用于反射创建对象
     /// </summary>
     public class Constant
     {

@@ -16,7 +16,7 @@ namespace LambdaAndGeneric.BLL
         /// <summary>
         /// 通过反射创建数据访问
         /// </summary>
-        private CompanyIDAL _dao = FactoryBLL.FactoryBLL.CreateService<CompanyDAL>(Constant.CompanyDllName, Constant.CompanyTypeName);
+        private CompanyIDAL _dao = FactoryBLL.FactoryBLL.CreateService(Constant.CompanyDllName, Constant.CompanyTypeName) as CompanyIDAL;
         public IEnumerable<Company> GetList()
         {
             return _dao.GetList();

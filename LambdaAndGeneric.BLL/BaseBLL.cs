@@ -14,8 +14,7 @@ namespace LambdaAndGeneric.BLL
     /// <typeparam name="T">约束对象</typeparam>
     public class BaseBLL<T> : BaseIBLL<T> where T : new()
     {
-        private BaseIDAL<T> _dao = FactoryDAL.FactoryDAL.GetHelper<T>();
-
+        private BaseIDAL<T> _dao = FactoryBLL.FactoryBaseBLL.GetHelper<T>();
         /// <summary>
         /// 增加一条数据
         /// </summary>

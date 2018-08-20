@@ -13,13 +13,18 @@ namespace LambdaAndGeneric.FactoryBLL
     /// </summary>
     public class FactoryBLL
     {
-        public static T CreateService<T>(string DllDalName, string DllDalTypeName) where T : new()
+        /// <summary>
+        /// 创建实例
+        /// </summary>
+        /// <param name="DllDalName"></param>
+        /// <param name="DllDalTypeName"></param>
+        /// <returns></returns>
+        public static object CreateService(string DllDalName, string DllDalTypeName) 
         {
             Assembly assembly = Assembly.Load(DllDalName);
             Type dbHelperType = assembly.GetType(DllDalTypeName);
-            //Type markType = dbHelperType.MakeGenericType(typeof(T));//创建泛型
             object oHelper = Activator.CreateInstance(dbHelperType);
-            return (T)oHelper;
+            return oHelper;
         }
     }
 }
