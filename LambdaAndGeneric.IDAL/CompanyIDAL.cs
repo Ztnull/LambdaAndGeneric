@@ -8,6 +8,6 @@ namespace LambdaAndGeneric.IDAL
 {
     public partial interface CompanyIDAL : BaseIDAL<Model.Company>
     {
-
+        IEnumerable<Model.Company> GetList();
     }
 }

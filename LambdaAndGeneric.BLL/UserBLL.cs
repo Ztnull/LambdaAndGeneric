@@ -10,5 +10,6 @@ namespace LambdaAndGeneric.BLL
 {
     public partial class UserBLL : BaseBLL<User>, UserIBLL<User>
     {
+
     }
 }

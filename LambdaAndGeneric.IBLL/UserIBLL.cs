@@ -8,5 +8,6 @@ namespace LambdaAndGeneric.IBLL
 {
     public partial interface UserIBLL<T> : BaseIBLL<T> where T : new()
     {
+      
     }
 }

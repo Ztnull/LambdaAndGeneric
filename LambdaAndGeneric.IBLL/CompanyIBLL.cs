@@ -8,6 +8,6 @@ namespace LambdaAndGeneric.IBLL
 {
     public partial interface CompanyIBLL<T> : BaseIBLL<T> where T : new()
     {
-
+        IEnumerable<Model.Company> GetList();
     }
 }

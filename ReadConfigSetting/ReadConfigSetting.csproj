@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{470AF570-0037-43F6-B6A9-885E081100B8}</ProjectGuid>
+    <ProjectGuid>{56510547-7AAD-4FB5-8897-566057E319B0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LamdbaAndGeneric.HelperDAL</RootNamespace>
-    <AssemblyName>LamdbaAndGeneric.HelperDAL</AssemblyName>
+    <RootNamespace>ReadConfigSetting</RootNamespace>
+    <AssemblyName>ReadConfigSetting</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,14 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SenctionHelper.cs" />
+    <Compile Include="Constant.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ReadConfigSetting\ReadConfigSetting.csproj">
-      <Project>{56510547-7aad-4fb5-8897-566057e319b0}</Project>
-      <Name>ReadConfigSetting</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

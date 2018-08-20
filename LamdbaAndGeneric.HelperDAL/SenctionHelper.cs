@@ -6,20 +6,14 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ReadConfigSetting;
 
 namespace LamdbaAndGeneric.HelperDAL
 {
     public static class SenctionHelper
     {
 
-        static string ConnectionStringCustomers;
-
-        static SenctionHelper()
-        {
-            ConnectionStringCustomers = ConfigurationManager.ConnectionStrings["Customers"].ConnectionString;
-
-        }
-
+     
         #region 公用
 
 
@@ -61,7 +55,7 @@ namespace LamdbaAndGeneric.HelperDAL
         /// <returns>受影响的行数</returns>
         public static int ExecuteNonQuery(string cmdText, CommandType type, params SqlParameter[] parameters)
         {
-            using (SqlConnection conn = new SqlConnection(ConnectionStringCustomers))
+            using (SqlConnection conn = new SqlConnection(Constant.ConnectionStringCustomers))
             {
                 using (SqlCommand cmd = new SqlCommand(cmdText, conn))
                 {
@@ -115,7 +109,7 @@ namespace LamdbaAndGeneric.HelperDAL
         /// <returns>SqlDataReader对象</returns>
         public static SqlDataReader ExecuteReader(string cmdText, CommandType type, params SqlParameter[] parameters)
         {
-            SqlConnection conn = new SqlConnection(ConnectionStringCustomers);
+            SqlConnection conn = new SqlConnection(Constant.ConnectionStringCustomers);
             using (SqlCommand cmd = new SqlCommand(cmdText, conn))
             {
                 if (parameters != null)

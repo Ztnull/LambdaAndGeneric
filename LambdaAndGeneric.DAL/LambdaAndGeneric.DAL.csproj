@@ -59,6 +59,10 @@
       <Project>{470af570-0037-43f6-b6a9-885e081100b8}</Project>
       <Name>LamdbaAndGeneric.HelperDAL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ReadConfigSetting\ReadConfigSetting.csproj">
+      <Project>{56510547-7aad-4fb5-8897-566057e319b0}</Project>
+      <Name>ReadConfigSetting</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -14,7 +14,7 @@ namespace LambdaAndGeneric.BLL
     /// <typeparam name="T">约束对象</typeparam>
     public class BaseBLL<T> : BaseIBLL<T> where T : new()
     {
-        private BaseIDAL<T> dao = new BaseDAL<T>();
+        private BaseIDAL<T> _dao = FactoryDAL.FactoryDAL.GetHelper<T>();
 
         /// <summary>
         /// 增加一条数据
@@ -23,7 +23,7 @@ namespace LambdaAndGeneric.BLL
         /// <returns></returns>
         public bool ADD(T Entity)
         {
-            return dao.ADD(Entity);
+            return _dao.ADD(Entity);
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace LambdaAndGeneric.BLL
         /// <returns></returns>
         public bool Del(int ID)
         {
-            return dao.Del(ID);
+            return _dao.Del(ID);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace LambdaAndGeneric.BLL
         /// <returns></returns>
         public bool Update(T Entity)
         {
-            return dao.Update(Entity);
+            return _dao.Update(Entity);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace LambdaAndGeneric.BLL
         /// <returns></returns>
         public T GetEntity(int ID)
         {
-            return dao.GetEntity(ID);
+            return _dao.GetEntity(ID);
         }
 
         /// <summary> 
@@ -64,7 +64,7 @@ namespace LambdaAndGeneric.BLL
         /// <returns></returns>
         public IEnumerable<T> GetEntityList(string where)
         {
-            return dao.GetEntityList(where);
+            return _dao.GetEntityList(where);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace LambdaAndGeneric.BLL
         /// <returns></returns>
         public IEnumerable<W> GetEntityListSQl<W>(string sql)
         {
-            return dao.GetEntityListSQl<W>(sql);
+            return _dao.GetEntityListSQl<W>(sql);
         }
     }
 }
