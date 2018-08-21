@@ -213,8 +213,7 @@ namespace LambdaAndGeneric.DAL
         /// <param name="sql"></param>
         /// <returns></returns>
         public IEnumerable<W> GetEntityListSQl<W>(string sql)
-        {
-            // SqlDataReader reader  SenctionHelper.Excute<SqlDataReader>(sql, s => { return s.ExecuteReader(); });
+        { 
             IList<W> list = new List<W>();
             return SenctionHelper.Excute<IList<W>>(sql, s =>
                  {
