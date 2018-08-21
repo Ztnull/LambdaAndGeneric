@@ -17,7 +17,7 @@ namespace LamdbaAndGeneric.HelperDAL
     {
 
 
-        #region +Old 公用
+        #region +Old 公用 +More
 
 
         #region 获取映射模型的字段
@@ -184,7 +184,7 @@ namespace LamdbaAndGeneric.HelperDAL
         #endregion 
 
 
-        #region +New 抽象出所有的数据操作。
+        #region +New 抽象出所有的数据操作。+ static T Excute<T>(string sql, Func<SqlCommand, T> func, params SqlParameter[] parameters)
 
         /// <summary>
         ///抽象出所有的数据操作。
