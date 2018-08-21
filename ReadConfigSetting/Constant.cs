@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+/// <summary>
+/// 配置
+/// </summary>
 namespace ReadConfigSetting
 {
     /// <summary>

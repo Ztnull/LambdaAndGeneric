@@ -6,7 +6,7 @@ using ReadConfigSetting;
 namespace LambdaAndGeneric.FactoryBLL
 {
     /// <summary>
-    /// 数据工厂
+    /// 数据工厂【主要针对于基类】
     /// </summary>
     public class FactoryBaseBLL
     {
