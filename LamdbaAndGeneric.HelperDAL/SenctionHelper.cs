@@ -10,11 +10,14 @@ using ReadConfigSetting;
 
 namespace LamdbaAndGeneric.HelperDAL
 {
+    /// <summary>
+    /// 简单封装，针对于数据库的操作，旧的封装SQl见Common层的SqlHelper
+    /// </summary>
     public static class SenctionHelper
     {
 
 
-        #region 公用
+        #region +Old 公用
 
 
         #region 获取映射模型的字段
@@ -178,12 +181,10 @@ namespace LamdbaAndGeneric.HelperDAL
         }
         #endregion
 
-        #endregion
+        #endregion 
 
 
-
-
-        #region 泛型命令封装
+        #region +New 抽象出所有的数据操作。
 
         /// <summary>
         ///抽象出所有的数据操作。
@@ -197,7 +198,7 @@ namespace LamdbaAndGeneric.HelperDAL
             using (SqlConnection conn = new SqlConnection(Constant.ConnectionStringCustomers))
             {
                 conn.Open();
-                //SqlTransaction trans = conn.BeginTransaction();         
+                //SqlTransaction trans = conn.BeginTransaction(); ///开启事务
                 try
                 {
                     using (SqlCommand command = new SqlCommand(sql, conn))
