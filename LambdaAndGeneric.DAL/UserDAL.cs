@@ -27,7 +27,7 @@ namespace LambdaAndGeneric.DAL
                        if (reader.HasRows)
                        {
                            while (reader.Read())
-                           {
+                           { 
                                userList.Add(SenctionHelper.MapEntity<User>(reader));
                            }
                        }

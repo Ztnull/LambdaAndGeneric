@@ -213,7 +213,7 @@ namespace LamdbaAndGeneric.HelperDAL
                     }
                 }
                 catch (Exception ex)
-                {
+                { 
                     //trans.Rollback();
                     throw ex;
                 }
