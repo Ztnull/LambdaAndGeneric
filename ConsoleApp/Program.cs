@@ -19,6 +19,14 @@ namespace ConsoleApp
                 //var xx = company.GetEntity(1);
 
 
+                foreach (var item in company.GetEntityList("id>0"))
+                {
+                    Console.WriteLine(item.ID + "***" + item.LastModifierId + "**" + item.LastModifyTime + "***" + item.Name);
+                }
+                Console.ReadKey();
+
+                 
+
                 //var result = company.Update(new Company() { CreateTime = System.DateTime.Now, CreatorId = 2, ID = 9, LastModifierId = 2, LastModifyTime = System.DateTime.Now, Name = "测试数据", });
                 //Console.WriteLine(result);
 
@@ -109,12 +117,12 @@ namespace ConsoleApp
                     Console.Write("\n");
                     Console.WriteLine("*****************************User GetEntity***********************************");
                     var state = userBLL.GetEntity(6);
-                    Console.WriteLine(typeof(User).GetProperties().Select(u=>string.Format("{0}     ",u.Name)).FirstOrDefault());
+                    Console.WriteLine(typeof(User).GetProperties().Select(u => string.Format("{0}     ", u.Name)).FirstOrDefault());
                     foreach (var item in state.GetType().GetProperties())
                     {
                         foreach (var i in item.GetType().GetProperties())
                         {
-                            Console.WriteLine(i.GetValue(item)+"        ");
+                            Console.WriteLine(i.GetValue(item) + "        ");
                         }
                     }
                     Console.WriteLine(state);
@@ -153,7 +161,7 @@ namespace ConsoleApp
                     }
 
                 }
- 
+
 
             }
 

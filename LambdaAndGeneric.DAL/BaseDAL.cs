@@ -213,7 +213,7 @@ namespace LambdaAndGeneric.DAL
         /// <param name="sql"></param>
         /// <returns></returns>
         public IEnumerable<W> GetEntityListSQl<W>(string sql)
-        { 
+        {
             IList<W> list = new List<W>();
             return SenctionHelper.Excute<IList<W>>(sql, s =>
                  {
@@ -259,18 +259,16 @@ namespace LambdaAndGeneric.DAL
                 where);
 
 
-            IList<T> list = new List<T>();
-
-            return SenctionHelper.Excute<IList<T>>(sql, s =>
+            return SenctionHelper.Excute<IEnumerable<T>>(sql, s =>
             {
+                List<T> tList = new List<T>();
                 using (SqlDataReader reader = s.ExecuteReader())
                 {
                     if (reader.HasRows)
                     {
                         while (reader.Read())
-                        {
-
-                            list.Add(SenctionHelper.MapEntity<T>(reader));
+                        { 
+                            tList.Add(SenctionHelper.MapEntity<T>(reader));
                         }
                     }
                     else
@@ -278,7 +276,7 @@ namespace LambdaAndGeneric.DAL
                         return default(List<T>);
                     }
                 }
-                return list;
+                return tList;
             });
         }
 
