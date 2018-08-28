@@ -14,6 +14,7 @@ namespace LambdaAndGeneric.Common
     /// </summary>
     public class MD5Encrypt
     {
+
         #region MD5
         /// <summary>
         /// MD5加密,和动网上的16/32位MD5加密结果相同,
@@ -153,7 +154,6 @@ namespace LambdaAndGeneric.Common
             return Convert.ToBase64String(resultBytes);
         }
     }
-
 
 
     /// <summary>
