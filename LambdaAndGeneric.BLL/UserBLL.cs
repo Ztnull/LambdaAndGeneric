@@ -15,7 +15,7 @@ namespace LambdaAndGeneric.BLL
         /// <summary>
         /// 通过反射创建数据访问
         /// </summary>
-        private UserIDAL _dao = FactoryBLL.FactoryBLL.CreateService(Constant.UserDllName, Constant.UserTypeName) as UserIDAL;
+        private UserIDAL _dao = FactoryBLL.FactoryBLL.CreateService<UserIDAL>(Constant.UserDllName, Constant.UserTypeName);
         public List<User> Test()
         {
             return _dao.Test();

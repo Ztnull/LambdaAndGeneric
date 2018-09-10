@@ -45,6 +45,10 @@
     <Compile Include="FactoryBaseBLL.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LambdaAndGeneric.IBLL\LambdaAndGeneric.IBLL.csproj">
+      <Project>{722b3d8a-f08e-484d-9b7f-84432f0ee2e7}</Project>
+      <Name>LambdaAndGeneric.IBLL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LambdaAndGeneric.IDAL\LambdaAndGeneric.IDAL.csproj">
       <Project>{018560C2-2472-4D32-8B36-32DF3B816A49}</Project>
       <Name>LambdaAndGeneric.IDAL</Name>

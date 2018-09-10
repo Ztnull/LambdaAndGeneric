@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using LambdaAndGeneric.IBLL;
 using ReadConfigSetting;
 
 namespace LambdaAndGeneric.FactoryBLL
@@ -19,12 +20,12 @@ namespace LambdaAndGeneric.FactoryBLL
         /// <param name="DllDalName"></param>
         /// <param name="DllDalTypeName"></param>
         /// <returns></returns>
-        public static object CreateService(string DllDalName, string DllDalTypeName) 
+        public static T CreateService<T>(string DllDalName, string DllDalTypeName) 
         {
             Assembly assembly = Assembly.Load(DllDalName);
             Type dbHelperType = assembly.GetType(DllDalTypeName);
             object oHelper = Activator.CreateInstance(dbHelperType);
-            return oHelper;
+            return (T)oHelper;
         }
     }
 }

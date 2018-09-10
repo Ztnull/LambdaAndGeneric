@@ -15,7 +15,17 @@ namespace Unit
         {
             try
             {
-                List<int> vs = new List<int>() { 1, 2, 3, 4, 5, 6, 6, 7, 87, 1, 2, 3, 4, 5, 6, 6, 7, 871, 2, 3, 4, 5, 6, 6, 7, 871, 2, 3, 4, 5, 6, 6, 7, 87,123,123,12,334,334,355634523,4,3241,23,12,31,41 };
+                List<int> vs = new List<int>() { 1, 2, 3, 4, 5, 6, 6, 7, 87, 1, 2, 3, 4, 5, 6, 6, 7, 871, 2, 3, 4, 5, 6, 6, 7, 871, 2, 3, 4, 5, 6, 6, 7, 87, 123, 123, 12, 334, 334, 355634523, 4, 3241, 23, 12, 31, 41 };
+                List<string> listStr = new List<string>() { "123", "321", "sdsssss","s","ss","ss1" };
+
+                var strResult = TWhere<string>(listStr, s => s.Contains("sss"));
+
+                foreach (var item in strResult)
+                {
+                    Console.WriteLine(item);
+                }
+
+
                 var result = TWhere<int>(vs, f => f > 6);
                 foreach (var item in result)
                 {
@@ -27,6 +37,7 @@ namespace Unit
             {
                 throw ex;
             }
+            Console.ReadKey();
         }
 
         /// <summary>
